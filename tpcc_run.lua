@@ -30,7 +30,7 @@ function other_ware (home_ware)
 
     if sysbench.opt.scale == 1 then return home_ware end
     repeat
-       tmp = sysbench.rand.uniform(1, sysbench.opt.scale)
+       tmp = sysbench.rand.gaussian(1, sysbench.opt.scale)
     until tmp == home_ware
     return tmp
 end
@@ -39,13 +39,13 @@ function new_order()
 
 -- prep work
 
-    local table_num = sysbench.rand.uniform(1, sysbench.opt.tables)
-    local w_id = sysbench.rand.uniform(1, sysbench.opt.scale)
-    local d_id = sysbench.rand.uniform(1, DIST_PER_WARE)
+    local table_num = sysbench.rand.gaussian(1, sysbench.opt.tables)
+    local w_id = sysbench.rand.gaussian(1, sysbench.opt.scale)
+    local d_id = sysbench.rand.gaussian(1, DIST_PER_WARE)
     local c_id = NURand(1023, 1, CUST_PER_DIST)
 
-    local ol_cnt = sysbench.rand.uniform(5, 15);
-    local rbk = sysbench.rand.uniform(1, 100);
+    local ol_cnt = sysbench.rand.gaussian(5, 15);
+    local rbk = sysbench.rand.gaussian(1, 100);
     local itemid = {}
     local supware = {}
     local qty = {}
@@ -58,14 +58,14 @@ function new_order()
 	then
             itemid[i] = -1
         end
-        if sysbench.rand.uniform(1, 100) ~= 1
+        if sysbench.rand.gaussian(1, 100) ~= 1
 	then
             supware[i] = w_id
         else 
             supware[i] = other_ware(w_id)
             all_local = 0
         end
-        qty[i] = sysbench.rand.uniform(1, 10)
+        qty[i] = sysbench.rand.gaussian(1, 10)
    end
 
 
@@ -226,28 +226,28 @@ end
 function payment()
 -- prep work
 
-    local table_num = sysbench.rand.uniform(1, sysbench.opt.tables)
-    local w_id = sysbench.rand.uniform(1, sysbench.opt.scale)
-    local d_id = sysbench.rand.uniform(1, DIST_PER_WARE)
+    local table_num = sysbench.rand.gaussian(1, sysbench.opt.tables)
+    local w_id = sysbench.rand.gaussian(1, sysbench.opt.scale)
+    local d_id = sysbench.rand.gaussian(1, DIST_PER_WARE)
     local c_id = NURand(1023, 1, CUST_PER_DIST)
-    local h_amount = sysbench.rand.uniform(1,5000)
+    local h_amount = sysbench.rand.gaussian(1,5000)
     local byname
     local c_w_id
     local c_d_id
     local c_last = Lastname(NURand(255,0,999))
 
-    if sysbench.rand.uniform(1, 100) <= 60 then
+    if sysbench.rand.gaussian(1, 100) <= 60 then
         byname = 1 -- select by last name 
     else
         byname = 0 -- select by customer id 
     end
 
-    if sysbench.rand.uniform(1, 100) <= 85 then
+    if sysbench.rand.gaussian(1, 100) <= 85 then
         c_w_id = w_id
         c_d_id = d_id
     else
         c_w_id = other_ware(w_id)
-        c_d_id = sysbench.rand.uniform(1, DIST_PER_WARE)
+        c_d_id = sysbench.rand.gaussian(1, DIST_PER_WARE)
     end
 
 --  UPDATE warehouse SET w_ytd = w_ytd + :h_amount
@@ -411,14 +411,14 @@ end
 
 function orderstatus()
 
-    local table_num = sysbench.rand.uniform(1, sysbench.opt.tables)
-    local w_id = sysbench.rand.uniform(1, sysbench.opt.scale)
-    local d_id = sysbench.rand.uniform(1, DIST_PER_WARE)
+    local table_num = sysbench.rand.gaussian(1, sysbench.opt.tables)
+    local w_id = sysbench.rand.gaussian(1, sysbench.opt.scale)
+    local d_id = sysbench.rand.gaussian(1, DIST_PER_WARE)
     local c_id = NURand(1023, 1, CUST_PER_DIST)
     local byname
     local c_last = Lastname(NURand(255,0,999))
 
-    if sysbench.rand.uniform(1, 100) <= 60 then
+    if sysbench.rand.gaussian(1, 100) <= 60 then
         byname = 1 -- select by last name 
     else
         byname = 0 -- select by customer id 
@@ -548,9 +548,9 @@ function orderstatus()
 end
 
 function delivery()
-    local table_num = sysbench.rand.uniform(1, sysbench.opt.tables)
-    local w_id = sysbench.rand.uniform(1, sysbench.opt.scale)
-    local o_carrier_id = sysbench.rand.uniform(1, 10)
+    local table_num = sysbench.rand.gaussian(1, sysbench.opt.tables)
+    local w_id = sysbench.rand.gaussian(1, sysbench.opt.scale)
+    local o_carrier_id = sysbench.rand.gaussian(1, 10)
 
     con:query("BEGIN")
     for  d_id = 1, DIST_PER_WARE do
@@ -654,10 +654,10 @@ function delivery()
 end
 
 function stocklevel()
-    local table_num = sysbench.rand.uniform(1, sysbench.opt.tables)
-    local w_id = sysbench.rand.uniform(1, sysbench.opt.scale)
-    local d_id = sysbench.rand.uniform(1, DIST_PER_WARE)
-    local level = sysbench.rand.uniform(10, 20)
+    local table_num = sysbench.rand.gaussian(1, sysbench.opt.tables)
+    local w_id = sysbench.rand.gaussian(1, sysbench.opt.scale)
+    local d_id = sysbench.rand.gaussian(1, DIST_PER_WARE)
+    local level = sysbench.rand.gaussian(10, 20)
 
     con:query("BEGIN")
 
@@ -748,9 +748,9 @@ end
 
 function purge()
     for i = 1, 10 do
-    local table_num = sysbench.rand.uniform(1, sysbench.opt.tables)
-    local w_id = sysbench.rand.uniform(1, sysbench.opt.scale)
-    local d_id = sysbench.rand.uniform(1, DIST_PER_WARE)
+    local table_num = sysbench.rand.gaussian(1, sysbench.opt.tables)
+    local w_id = sysbench.rand.gaussian(1, sysbench.opt.scale)
+    local d_id = sysbench.rand.gaussian(1, DIST_PER_WARE)
 
     con:query("BEGIN")
 
