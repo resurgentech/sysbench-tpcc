@@ -663,4 +663,33 @@ function NURand (A, x, y)
 	return ((( bit.bor(i, j) ) + C) % (y-x+1)) + x;
 end
 
+function NURandG (A, x, y)
+	local C
+
+	if init_rand 
+	then
+		C_255 = sysbench.rand.gaussian(0, 255)
+		C_1023 = sysbench.rand.gaussian(0, 1023)
+		C_8191 = sysbench.rand.gaussian(0, 8191)
+		init_rand = 0
+	end
+
+	if A==255
+	then
+		C = C_255
+	elseif A==1023
+	then
+		C = C_1023
+	elseif A==8191
+	then
+		C = C_8191
+	end
+
+	-- return ((( sysbench.rand.gaussian(0, A) | sysbench.rand.gaussian(x, y)) + C) % (y-x+1)) + x;
+	local i = sysbench.rand.gaussian(0, A)
+	local j = sysbench.rand.gaussian(x, y)
+
+	return ((( bit.bor(i, j) ) + C) % (y-x+1)) + x;
+end
+
 -- vim:ts=4 ss=4 sw=4 expandtab
