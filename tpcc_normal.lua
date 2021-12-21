@@ -592,7 +592,7 @@ function delivery()
 --				AND o_w_id = :w_id;*/
 
         local o_c_id
-        local jretries = 3
+        local jretries = 10000
         o_c_id = nil
         while (jretries > 0)
         do
