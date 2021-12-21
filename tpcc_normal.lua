@@ -592,12 +592,30 @@ function delivery()
 --				AND o_w_id = :w_id;*/
 
         local o_c_id
-        o_c_id = con:query_row(([[SELECT o_c_id
+        local jretries = 1000
+        o_c_id = nil
+        while (jretries > 0)
+        do
+          o_c_id = con:query_row(([[SELECT o_c_id
                                     FROM orders%d 
                                    WHERE o_id = %d 
                                      AND o_d_id = %d 
                                      AND o_w_id = %d;]])
                                   :format(table_num, no_o_id, d_id, w_id))
+          if(o_c_id ~= nil)
+          then
+            jretries = 0
+          else
+            print(string.format("OOPS - select o_c_id nil, table_num %d, no_o_id %d, d_id %d w_id %d",table_num, no_o_id, d_id, w_id))
+            con:query(([[UPDATE orders%d 
+                            SET o_carrier_id = %d
+                          WHERE o_id = %d 
+                            AND o_d_id = %d 
+                            AND o_w_id = %d]])
+                          :format(table_num, o_carrier_id, no_o_id, d_id, w_id))
+            jretries = jretries - 1
+          end
+        end
 
 --	 UPDATE orders SET o_carrier_id = :o_carrier_id
 --		                WHERE o_id = :no_o_id AND o_d_id = :d_id AND
@@ -609,11 +627,6 @@ function delivery()
                         AND o_d_id = %d 
                         AND o_w_id = %d]])
                       :format(table_num, o_carrier_id, no_o_id, d_id, w_id))
-
-        if(o_c_id == nil)
-        then
-          print(string.format("OOPS - select o_c_id nil, table_num %d, no_o_id %d, d_id %d w_id %d",table_num, no_o_id, d_id, w_id))
-        end
 
 --   UPDATE order_line
 --		                SET ol_delivery_d = :datetime
