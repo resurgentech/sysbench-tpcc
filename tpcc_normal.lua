@@ -607,7 +607,7 @@ function delivery()
             jretries = 0
           else
             print(string.format("OOPS - select o_c_id nil, table_num %d, no_o_id %d, d_id %d w_id",table_num, no_o_id, d_id, w_id))
-            jretries -= 1
+            jretries = jretries - 1
           end
         end
 
