@@ -592,7 +592,7 @@ function delivery()
 --				AND o_w_id = :w_id;*/
 
         local o_c_id
-        local jretries = 10000
+        local jretries = 100000
         o_c_id = nil
         while (jretries > 0)
         do
@@ -600,7 +600,7 @@ function delivery()
                                     FROM orders%d 
                                    WHERE o_id = %d 
                                      AND o_d_id = %d 
-                                     AND o_w_id = %d]])
+                                     AND o_w_id = %d;]])
                                   :format(table_num, no_o_id, d_id, w_id))
           if(o_c_id ~= nil)
           then
